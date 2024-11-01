@@ -1,37 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include "./functions.h"
 
-int inputX(long double *x);
-int inputLimit(int *limit);
-
-int main() {
-	long double x;
-	int limit;
-	
-	if((inputX(&x) == EOF) || (inputLimit(&limit) == EOF)) {
-		return 0;
-	};
-
-	x = x / 2;
+long double getCos(long double radians, int limit) {
 	long double numInDegree = 1;
 	long double factorial = 1;
 	long double res = 1;
+	radians = fmod(radians, 2 * M_PI);
 
 	for(int i = 1; i < limit ; i++) {
-		
-		numInDegree *= -1 * x * x;
+
+		numInDegree *= -1 * radians * radians;
 		factorial *= (2*i) * (2*i -1);
 
 		res += (numInDegree / factorial);
 	}
-
-
-	printf("RES: %.32Lf\n", res);
-	printf("math: %.32Lf\n", cosl(x));
-	return 0;
-};
-
+	return res;
+}
 
 int inputX(long double *x) {
 	char inputValue[20];
