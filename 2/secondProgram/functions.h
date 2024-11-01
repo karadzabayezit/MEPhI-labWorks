@@ -7,4 +7,4 @@
 #endif
 
 int input(long double *x);
-long double getCosWhile(long double x, long double accurancy);
+long double getCosWhile(long double x, long double accurancy, int *termsCount);

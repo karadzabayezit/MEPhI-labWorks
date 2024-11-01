@@ -1,6 +1,6 @@
 #include "./functions.h"
 
-long double getCosWhile(long double radians, long double accurancy) {
+long double getCosWhile(long double radians, long double accurancy, int *termsCount) {
 	long double numInDegree = 1;
 	long double factorial = 1;
 	long double res = 1;
@@ -14,9 +14,9 @@ long double getCosWhile(long double radians, long double accurancy) {
 
         raz = numInDegree / factorial;
         res += raz;
-        i += 1;
+        i ++;
+        (*termsCount)++;
     } while (fabsl(raz) > accurancy);
-
 	return res;
 }
 
