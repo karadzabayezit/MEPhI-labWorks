@@ -1,25 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-long double input();
+int input(long double *x);
 
 
 int main() {
-	long double x; 
+	long double x;
 	if(input(&x) == EOF) {
 		return 0;
 	};
+
 	long double accurancy;
-	if(input(&accurancy)) {
+	if(input(&accurancy) == EOF) {
 		return 0;
 	};
-	
+
 	long double numInDegree = 1;
 	long double factorial = 1;
 	long double res = 0;
 	int i = 0;
 	long double raz = 1;
-	
+
 	while ((raz < 0 ? raz * -1 : raz) > accurancy) {
 		raz = res;
 		int degree = -1;
@@ -36,14 +37,14 @@ int main() {
 		printf("fac: %Lf\n", factorial);
 		printf("\n");
 
-		long double devided = numInDegree / factorial;	
-		
+		long double devided = numInDegree / factorial;
+
 		res += (long double) degree * devided;
 		raz = (long double) raz - res;
-		printf("%Lf", raz);
-		i += 1; 
+		printf("raznisa: %.16Lf\n", raz);
+		i += 1;
 	}
-	
+
 
 	printf("RES: %.32Lf\n", res);
 
@@ -51,28 +52,25 @@ int main() {
 };
 
 
-long double input(long double *x) {
-	char inputValue[30];
-	long double var;
-	
-	while (1) {	
-		printf("Gimme value: ");
-		if(fgets(inputValue, sizeof(inputValue), stdin) == NULL){
-			printf("\n!!!!!!!    EOF    !!!!!!!!!!!!!!\n");
-			return EOF;
-		};
+int input(long double *x) {
+  char inputValue[30];
 
-		char *notNum;
+  while (1) {
+      printf("Gimme value: ");
+      if (fgets(inputValue, sizeof(inputValue), stdin) == NULL) {
+          printf("\n!!!!!!!    EOF    !!!!!!!!!!!!!!\n");
+          return EOF;
+      }
 
-		var = strtold(inputValue, &notNum);
+      char *notNum;
+      long double var = strtold(inputValue, &notNum);
 
-		if(notNum == inputValue || *notNum != '\n') {
-			printf("Incorrect. ");
-		} else {
-			return 0;
-		}		
-	}
-	*x = var;
-	printf("%Lf", *x);
+      if (notNum == inputValue || *notNum != '\n') {
+          printf("Incorrect. ");
+      } else {
+          *x = var;
+          return 0;
+      }
+  }
 }
 
