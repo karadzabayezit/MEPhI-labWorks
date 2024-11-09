@@ -4,6 +4,6 @@ if [ ! -d "./build" ]; then
 fi
 gcc *.c -o ./build/app -lm
 echo "Compiled."
-echo $'\nStarting program:'
+echo $'Starting program:'
 ./build/app
-echo "End."
+echo $'\nEnd.'
