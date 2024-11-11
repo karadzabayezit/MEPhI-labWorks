@@ -11,17 +11,8 @@ int main() {
   char option = -1;
 
   do {
-    printf("\n");
-    printf("|****************** MENU ****************|\n");
-    printf("|1. Initialize an array.                 |\n");
-    printf("|2. Paste to array by index.             |\n");
-    printf("|3. Removing element from array by index.|\n");
-    printf("|4. Individual task.                     |\n");
-    printf("|5. Print array.                         |\n");
-    printf("|0.(Ctrl+D). Exit.                       |\n");
-    printf("|****************************************|\n");
-    printf("|Choose one option: ");
-
+	print_menu();
+	
     int r = scanf(" %c", &option);
 
     if (r == EOF) {
