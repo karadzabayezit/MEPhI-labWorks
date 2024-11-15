@@ -17,44 +17,33 @@ void print_menu() {
 }
 
 int inputF(float *x) {
-  char inputValue[20];
-
-	while (1) {
-		printf("Gimme x: ");
-		if(fgets(inputValue, sizeof(inputValue), stdin) == NULL){
-			printf("\n!!!!!!!    EOF    !!!!!!!!!!!!!!\n");
+	float num;
+	while(1) {
+		int res = scanf("%f", &num);
+		if(res == EOF) {
 			return EOF;
-		};
-
-		char *notNum;
-
-		*x = strtof(inputValue, &notNum);
-
-		if(notNum == inputValue || *notNum != '\n') {
-			printf("Incorrect. ");
+		}
+		if(res != 1) {
+			printf("incorrect input, try again: ");
+			while(getchar() != '\n');
 		} else {
+			*x = num;
 			return 0;
 		}
 	}
 }
 int inputInt(int *x) {
-  char inputValue[20];
-
-	while (1) {
-		printf("Gimme x: ");
-		if(fgets(inputValue, sizeof(inputValue), stdin) == NULL){
-			printf("\n!!!!!!!    EOF    !!!!!!!!!!!!!!\n");
+	int num;
+	while(1) {
+		int res = scanf("%d", &num);
+		if(res == EOF) {
 			return EOF;
-		};
-
-		char *notNum;
-
-		long res = strtol(inputValue, &notNum, 10);
-
-		if(notNum == inputValue || *notNum != '\n') {
-			printf("Incorrect. ");
+		}
+		if(res != 1) {
+			printf("incorrect input, try again: ");
+			while(getchar() != '\n');
 		} else {
-      *x = (int)res;
+			*x = num;
 			return 0;
 		}
 	}
@@ -90,7 +79,7 @@ Err init_array(float **arr, int *len) {
 
     i++;
   } while(i < *len);
-
+  free(*arr);
   *arr = new_arr;
   printf("Successfully initialized an array!\n");
   return ERR_OK;
@@ -101,8 +90,14 @@ Err init_array(float **arr, int *len) {
 Err insert_at(float **arr, int *len) {
   int index;
   float value;
-  printf("%d", *len);
-  if((inputInt(&index) == EOF) || (inputF(&value) == EOF)) {
+
+	printf("Enter index: ");
+	if(inputInt(&index) == EOF) {
+		return EOF;
+	}
+	
+	printf("Enter Value: ");
+  	if(inputF(&value) == EOF) {
 		return EOF;
 	};
 
@@ -110,11 +105,73 @@ Err insert_at(float **arr, int *len) {
     printf("Index out of length\n");
     return ERR_MEM;
   };
+
   float *new_arr = realloc(*arr, ((*len + 1) * sizeof(int)));
+
   for (int i = *len; i > index; i--) {
     new_arr[i] = new_arr[i - 1];
   }
+
   new_arr[index] = value;
   *arr = new_arr;
   *len = *len + 1;
 };
+
+
+int remove_at(float **arr, int *len) {
+	int index;
+
+	printf("Enter index: ");
+	if(inputInt(&index) == EOF) {
+		return EOF;
+	}
+	if (index < 0 || index > *len) {
+    	printf("Index out of length\n");
+    	return -1;
+  	};
+
+	for(int i = index; i < *len-1; i++) {
+		(*arr)[i] = (*arr)[i+1];
+	}
+
+	*arr = realloc(*arr, ((*len - 1) * sizeof(float)));
+	(*len)--;
+	return 0;
+}
+
+int processing_arr(float **arr, int *len) {
+	float average = 0;
+	for(int i = 0; i < *len; i++) {
+		average += (*arr)[i];
+	}
+	average = average / *len;
+
+	printf("Average: %f\n", average);
+
+	float *new_arr = malloc(*len * sizeof(float));
+	int count = 0;
+	for(int i = 0; i < *len; i++) {
+		new_arr[i] = (*arr)[i] - average;
+		printf("new_arr[%d] - %f\n", i, new_arr[i]);
+		if((*arr)[i] <= average) {
+			count++;
+		}
+	}
+
+	float *new_arr_without = malloc(count * sizeof(float));
+	int index = 0;
+	for(int i = 0; i < *len; i++) {
+		if((*arr)[i] <= average) {
+			new_arr_without[index] = (*arr)[i];
+			index++;
+		}
+	}	
+
+	free(*arr);
+	
+	*len = count;
+	*arr = new_arr_without;
+
+	free(new_arr);
+	return 0;
+}

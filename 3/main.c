@@ -31,8 +31,10 @@ int main() {
         insert_at(&data, &len);
         break;
       case '3':
+      	remove_at(&data, &len);
         break;
       case '4':
+      	processing_arr(&data, &len);
         break;
       case '5':
         array_print(data, len);
