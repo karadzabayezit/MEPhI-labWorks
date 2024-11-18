@@ -7,6 +7,7 @@
 int main() {
   srand(time(NULL));
   float *data = NULL;
+  int mem = 0;
   int len = 0;
   char option = -1;
 
@@ -25,18 +26,26 @@ int main() {
         printf("Exiting...\n");
         break;
       case '1':
-        init_array(&data, &len);
+        init_mem(&data, &mem, &len);
         break;
       case '2':
-        insert_at(&data, &len);
+        init_array(data, mem, &len);
         break;
       case '3':
-      	remove_at(&data, &len);
+        insert_at(data, mem, &len);
         break;
       case '4':
-      	processing_arr(&data, &len);
+      	int index;
+      	printf("Enter the index: ");
+      	if(inputInt(&index) == EOF){
+      		return EOF;
+      	}
+      	remove_at(data, mem, &len, index);
         break;
       case '5':
+      	processing_arr(data, mem, &len);
+        break;
+      case '6':
         array_print(data, len);
         break;
       default:
