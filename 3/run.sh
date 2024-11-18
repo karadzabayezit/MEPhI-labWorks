@@ -5,5 +5,5 @@ fi
 gcc *.c -g -o ./build/app -lm
 echo "Compiled."
 echo $'Starting program:'
-valgrind ./build/app
+./build/app
 echo $'\nEnd.'

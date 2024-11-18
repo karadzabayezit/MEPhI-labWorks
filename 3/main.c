@@ -11,8 +11,8 @@ int main() {
   char option = -1;
 
   do {
-	print_menu();
-	
+	  print_menu();
+
     int r = scanf(" %c", &option);
 
     if (r == EOF) {
