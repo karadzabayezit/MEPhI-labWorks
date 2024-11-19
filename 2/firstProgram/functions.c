@@ -1,17 +1,20 @@
 #include "./functions.h"
 
 long double getCos(long double radians, int limit) {
-	long double numInDegree = 1;
-	long double factorial = 1;
 	long double res = 1;
+	long double term = 1;
+	
 	radians = fmod(radians, 2 * M_PI);
+	
+	long double numInDegree = -1 * radians * radians;
 
 	for(int i = 1; i < limit ; i++) {
 
-		numInDegree *= -1 * radians * radians;
-		factorial *= (2*i) * (2*i -1);
+		term *= numInDegree / (2 * i * (2*i -1));
 
-		res += (numInDegree / factorial);
+		if(fabsl(term) < 1e-15) break;
+		
+		res += term;
 	}
 	return res;
 }
