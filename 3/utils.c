@@ -12,7 +12,7 @@ void print_menu() {
     printf("|4. Removing element from array by index.|\n");
     printf("|5. Individual task.                     |\n");
     printf("|6. Print array.                         |\n");
-    printf("|0.(Ctrl+D). Exit.                       |\n");
+    printf("|0. (Ctrl+D). Exit.                       |\n");
     printf("|****************************************|\n");
     printf("|Choose one option: ");
 }
@@ -65,14 +65,30 @@ int init_mem(float **arr,int *mem,  int *len) {
 		if(size < *len) {
 			*len = size;
 		}
-	}	
+	}
 
 	return 0;
 };
 
-// int checkMem(int index, int mem) {
-// 	
-// }
+int check_mem_len(int index, int mem, int len) {
+	if(!len) {
+		printf("Oops... Array is empty\n");
+    return 1;
+	}
+	if(index < 0) {
+		printf("Index out of length.\n");
+		return 2;
+	}
+	if(index > mem || index+1 > mem) {
+		printf("Index out of mem. Increase mem!!!\n");
+		return -1;
+	}
+	if(len >= mem) {
+		printf("Length out of range. Increase mem!!!\n");
+		return -1;
+	}
+	return 0;
+}
 
 
 void array_print(const float *arr, int len) {
@@ -88,19 +104,17 @@ void array_print(const float *arr, int len) {
 }
 
 Err init_array(float *arr, int mem, int *len) {
-  printf("\nEnter the length: ");
+  printf("\nEnter the length: "); scanf("%d", len);
 
-  scanf("%d", len);
-  if(*len > mem) {
-  	printf("Length out of memory. Increase the mem first!");
-  	return ERR_MEM;
-  }
+	if(check_mem_len(0, mem, *len) != 0) {
+		return 1;
+	}
+
   if(*len < 1) {
     printf("Enter the length correctly");
     return ERR_MEM;
   }
 
-  
   int i = 0;
   do {
     float elem;
@@ -112,7 +126,7 @@ Err init_array(float *arr, int mem, int *len) {
 
     i++;
   } while(i < *len);
-  
+
   printf("Successfully initialized an array!\n");
   return ERR_OK;
 };
@@ -120,39 +134,26 @@ Err init_array(float *arr, int mem, int *len) {
 
 
 Err insert_at(float *arr, int mem, int *len) {
-  if(!(*len)) {
-  	printf("Oops... Array is empty!");
-  	return ERR_MEM;
-  }
-  if(mem == *len || mem < *len) {
-  	printf("Increase mem!!!");
-  	return 1;
-  }
   int index;
   float value;
-
 	printf("Enter index: ");
 	if(inputInt(&index) == EOF) {
 		return EOF;
 	}
-	if (index < 0) {
-	    printf("Index out of length\n");
-	    return ERR_MEM;
-	};
+
 	if(index > *len+1) {
 		index = *len;
 	}
-	if(index+1 > mem) {
-  		printf("Length out of memory. Increase the mem first!");
-  		return ERR_MEM;
+
+	if(check_mem_len(index, mem, *len) != 0) {
+		return 1;
 	}
-	
+
 	printf("Enter Value: ");
-	
-  	if(inputF(&value) == EOF) {
+  if(inputF(&value) == EOF) {
 		return EOF;
 	};
-	
+
   	for (int i = *len; i > index; i--) {
     	arr[i] = arr[i - 1];
   	}
@@ -164,18 +165,13 @@ Err insert_at(float *arr, int mem, int *len) {
 
 
 int remove_at(float *arr, int mem, int *len, int index) {
-    if(!(*len)) {
-  	  printf("Oops... Array is empty!");
-  	  return ERR_MEM;
-    }
-	
-	if (index < 0) {
-    	printf("Index out of length\n");
-    	return -1;
-  	};
-  	if(index > *len+1) {
-  			index = *len;
-  	}
+
+	if(check_mem_len(index, mem, *len) != 0) {
+		return 1;
+	}
+  if(index > *len+1) {
+  	index = *len;
+  }
 
 	for(int i = index; i < *len-1; i++) {
 		arr[i] = arr[i+1];
@@ -187,12 +183,11 @@ int remove_at(float *arr, int mem, int *len, int index) {
 }
 
 int processing_arr(float *arr, int mem, int *len) {
-	printf("%d - LEN\n", *len);
-	if(!(*len)) {
-	  	printf("Oops... Array is empty!");
-	  	return ERR_MEM;
+
+	if(check_mem_len(0, mem, *len) != 0) {
+		return 1;
 	}
-	
+
 	float average = 0;
 	for(int i = 0; i < *len; i++) {
 		average += arr[i];
@@ -204,10 +199,12 @@ int processing_arr(float *arr, int mem, int *len) {
 	float *new_arr = malloc(*len * sizeof(float));
 	int count = 0;
 	int i = 0;
-	while(i < *len) {
+	int prev = 0;
+
+	while(prev < *len) {
 		new_arr[i] = arr[i] - average;
 		printf("new_arr[%d] - %f\n", i, new_arr[i]);
-		printf("%d INDEX\n", i);
+
 		if(arr[i] > average) {
 			remove_at(arr, mem, len, i);
 			(*len)++;
@@ -215,11 +212,12 @@ int processing_arr(float *arr, int mem, int *len) {
 			i--;
 		}
 		i++;
+		prev++;
 	}
-	
+
 
 	free(new_arr);
-	
+
 	*len = *len - count;
 	return 0;
 }
