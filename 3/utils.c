@@ -89,6 +89,7 @@ void array_print(const float *arr, int len) {
 
 Err init_array(float *arr, int mem, int *len) {
   printf("\nEnter the length: ");
+
   scanf("%d", len);
   if(*len > mem) {
   	printf("Length out of memory. Increase the mem first!");
@@ -104,7 +105,9 @@ Err init_array(float *arr, int mem, int *len) {
   do {
     float elem;
     printf("element[%d]/[%d]: ", i+1, *len);
-    scanf("%f", &elem);
+    if(inputF(&elem) == EOF) {
+    	return EOF;
+    }
     arr[i] = elem;
 
     i++;
@@ -120,6 +123,10 @@ Err insert_at(float *arr, int mem, int *len) {
   if(!(*len)) {
   	printf("Oops... Array is empty!");
   	return ERR_MEM;
+  }
+  if(mem == *len || mem < *len) {
+  	printf("Increase mem!!!");
+  	return 1;
   }
   int index;
   float value;
@@ -141,15 +148,18 @@ Err insert_at(float *arr, int mem, int *len) {
 	}
 	
 	printf("Enter Value: ");
+	
   	if(inputF(&value) == EOF) {
 		return EOF;
 	};
-  for (int i = *len; i > index; i--) {
-    arr[i] = arr[i - 1];
-  }
+	
+  	for (int i = *len; i > index; i--) {
+    	arr[i] = arr[i - 1];
+  	}
 
-  arr[index] = value;
-  *len = *len + 1;
+  	arr[index] = value;
+  	*len = *len + 1;
+  	return 0;
 };
 
 
@@ -177,10 +187,12 @@ int remove_at(float *arr, int mem, int *len, int index) {
 }
 
 int processing_arr(float *arr, int mem, int *len) {
+	printf("%d - LEN\n", *len);
 	if(!(*len)) {
 	  	printf("Oops... Array is empty!");
 	  	return ERR_MEM;
 	}
+	
 	float average = 0;
 	for(int i = 0; i < *len; i++) {
 		average += arr[i];
@@ -191,13 +203,18 @@ int processing_arr(float *arr, int mem, int *len) {
 
 	float *new_arr = malloc(*len * sizeof(float));
 	int count = 0;
-	for(int i = 0; i < *len; i++) {
+	int i = 0;
+	while(i < *len) {
 		new_arr[i] = arr[i] - average;
 		printf("new_arr[%d] - %f\n", i, new_arr[i]);
+		printf("%d INDEX\n", i);
 		if(arr[i] > average) {
 			remove_at(arr, mem, len, i);
+			(*len)++;
 			count++;
+			i--;
 		}
+		i++;
 	}
 	
 
