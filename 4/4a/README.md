@@ -5,7 +5,7 @@
 cd scripts/
 ```
 
-## Using pyhton( $\color{red}{textsf{recommended}}$ ):
+## Using pyhton(recommended):
 ```
 python run.py
 ```
