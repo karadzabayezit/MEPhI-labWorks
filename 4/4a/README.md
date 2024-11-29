@@ -5,7 +5,7 @@
 cd scripts/
 ```
 
-## ${Using\ python\ (\ {\color{red}recommended}}\ )$:
+## ${Using\ python\ {\color{red}recommended}}$:
 ```
 python run.py
 ```
