@@ -9,8 +9,8 @@ char* read_line(char *str) {
   int len = 0;
   int n = 0;
 
+  printf("%s", str);
   do {
-    printf("%s", str);
     n = scanf("%80[^\n]", buf);
     if (n < 0 && !res) {
         return NULL;
