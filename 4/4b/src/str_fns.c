@@ -7,7 +7,7 @@ char* str_cat (char str[], char output[]) {
   int i = 0;
   int j = 0;
   while (str[i] != '\0') i++;
-  while ((str[i++] = output[j++]) != '\0') i++;
+  while ((str[i++] = output[j++]) != '\0');
   return str;
 }
 
