@@ -26,9 +26,7 @@ void process_str(const char *input, char *output) {
 
   while (1) {
 
-    printf("\n%c\n", *curr);
     while(is_space(*curr)) curr++;
-    printf("\n%c\n", *curr);
     if(*curr == '\0') break;
 
     sscanf(curr, "%1023s", word);

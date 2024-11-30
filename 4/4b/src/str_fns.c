@@ -3,13 +3,15 @@
 #include <string.h>
 
 
-void str_cat (char str[], char output[]) {
+char* str_cat (char str[], char output[]) {
   int i = 0;
   int j = 0;
+  char* pointer = str;
   while (str[i] != '\0') i++;
   while (output[j] != '\0') {
     str[i++] = output[j++];
   }
+  return pointer;
 }
 
 char* str_chr(const char* str, int c) {
@@ -24,12 +26,14 @@ char* str_chr(const char* str, int c) {
     return NULL;
 }
 
-void str_cpy(char *str_old, char *str_cp) {
+char* str_cpy(char *str_old, char *str_cp) {
   int i = 0;
+  char* pointer = str_old;
   while (str_old[i] != '\0' || str_cp[i] != '\0' ) {
     str_old[i] = str_cp[i];
     i++;
   }
+  return pointer;
 }
 
 int str_len(char *str) {
