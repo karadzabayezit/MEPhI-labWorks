@@ -6,12 +6,9 @@
 char* str_cat (char str[], char output[]) {
   int i = 0;
   int j = 0;
-  char* pointer = str;
   while (str[i] != '\0') i++;
-  while (output[j] != '\0') {
-    str[i++] = output[j++];
-  }
-  return pointer;
+  while ((str[i++] = output[j++]) != '\0') i++;
+  return str;
 }
 
 char* str_chr(const char* str, int c) {
