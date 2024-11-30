@@ -28,12 +28,8 @@ char* str_chr(const char* str, int c) {
 
 char* str_cpy(char *str_old, char *str_cp) {
   int i = 0;
-  char* pointer = str_old;
-  while (str_old[i] != '\0' || str_cp[i] != '\0' ) {
-    str_old[i] = str_cp[i];
-    i++;
-  }
-  return pointer;
+  while ((str_old[i] = str_cp[i]) != '\0' ) i++;
+  return str_old;
 }
 
 int str_len(char *str) {
