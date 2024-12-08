@@ -57,6 +57,7 @@ void process_str(const char *input, char **output) {
       strcat(temp, " ");
     }
   }
-
+  free(tmp_input);
+  free(input_copy);
   *output = temp;
 }
