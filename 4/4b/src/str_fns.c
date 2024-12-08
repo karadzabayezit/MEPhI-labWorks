@@ -103,6 +103,5 @@ char* str_dup(char* str) {
 	for (int i = 0; i < len; i++) {
 	  new_string[i] = str[i];
 	}
-	new_string[-1] = '\0';
 	return (char *) new_string;
 }
