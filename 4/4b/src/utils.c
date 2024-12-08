@@ -7,7 +7,7 @@
 #define SUFFIX "_SUFFIX"
 
 int is_first_vowel(const char *word) {
-  char vowels[] = "AEIOUaeiouАИЕЁОУЫЭЮЯаиеёоуыэюя";
+  char vowels[] = "AEIOUaeiou";
   return str_chr(vowels, word[0]) != NULL;
 }
 
@@ -18,14 +18,26 @@ void add_suffix(char *res, char *word) {
   }
 }
 
-void process_str(const char *input, char *output) {
-  char *input_copy = strdup(input);
-  const char delimeters[] = " ,.";
-  char *word = strtok((char*)input_copy, delimeters);
-  size_t output_len = strlen(input_copy);
-  char *temp;
+void process_str(const char *input, char **output) {
+  char *delimeters = " ,.";
 
-  temp = malloc(2*output_len * sizeof(char));
+  char* tmp_input = str_dup(input);
+  char* tmp_word = str_tok(tmp_input, delimeters);
+  int vowels_count = 0;
+  while(tmp_word != NULL) {
+    if(is_first_vowel(tmp_word)) {
+      vowels_count++;
+    }
+    tmp_word = str_tok(NULL, delimeters);
+  }
+  printf("%d\n", vowels_count);
+  size_t output_len = strlen(input);
+  char *temp;
+  output_len += (vowels_count * str_len(SUFFIX));
+  temp = malloc(output_len * sizeof(char));
+
+  char *input_copy = str_dup(input);
+  char *word = str_tok((char*)input_copy, delimeters);
 
   while (word != NULL) {
     size_t temp_len = sizeof(temp);
@@ -33,14 +45,13 @@ void process_str(const char *input, char *output) {
     if(is_first_vowel(word)) {
       strcat(temp, word);
       strcat(temp, SUFFIX);
-      printf("VOWEL: %s\n", temp);
     } else {
       strcat(temp, word);
     }
 
 
     output_len += str_len(word) + strlen(SUFFIX);
-    word = strtok(NULL, delimeters);
+    word = str_tok(NULL, delimeters);
 
     if(2*output_len > temp_len) {
       temp = realloc(temp, temp_len*2);
@@ -50,34 +61,5 @@ void process_str(const char *input, char *output) {
     }
   }
 
-  strcpy(output, temp);
-
-
-
-  // char temp[1024] = {0};
-  // char word[1024] = {0};
-  // int output_len = 0;
-
-  // const char *curr = input;
-
-  // while (1) {
-
-  //   while(is_space(*curr)) curr++;
-  //   if(*curr == '\0') break;
-
-  //   sscanf(curr, "%1023s", word);
-
-  //   char new_word[1024];
-  //   add_suffix(new_word, word);
-
-  //   if (output_len > 0) {
-  //     str_cat(temp, " ");
-  //   }
-  //   str_cat(temp, new_word);
-  //   output_len+= str_len(word);
-
-  //   curr += str_len(word);
-  // }
-
-  // str_cpy(output, temp);
+  *output = temp;
 }
