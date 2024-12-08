@@ -18,6 +18,7 @@ int main() {
     printf("\"%s\" -> \"%s\"\n", input, output);
 
     free(input);
+    free(output);
   }
 
   return 0;
