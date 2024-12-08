@@ -3,12 +3,17 @@
 #include <string.h>
 #include <stdbool.h>
 
-char* str_cat (char str[], char output[]) {
-  int i = 0;
-  int j = 0;
-  while (str[i] != '\0') i++;
-  while ((str[i++] = output[j++]) != '\0');
-  return str;
+char* str_cat (char des[], const char src[]) {
+  int i = 0, j = 0;
+
+  while (des[i] != '\0')
+    i += 1;
+  while (src[j] != '\0') {
+    des[i + j] = src[j];
+    j += 1;
+  }
+  des[i + j] = '\0';
+  return des;
 }
 
 char* str_chr(const char* str, int c) {
@@ -88,8 +93,8 @@ char *str_tok(char *s, char *delim) {
   }
 }
 
-char* str_dup(const char* str) {
-	size_t len = strlen(str) + 1;
+char* str_dup(char* str) {
+	size_t len = str_len(str) + 1;
 	char* new_string = (char *) malloc(len * sizeof(char));
 
 	if (new_string == NULL) {

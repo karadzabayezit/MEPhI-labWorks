@@ -30,7 +30,7 @@ void process_str(const char *input, char **output) {
     }
     tmp_word = str_tok(NULL, delimeters);
   }
-
+  free(tmp_input);
   char *temp;
   output_len += (vowels_count * str_len(SUFFIX));
   temp = malloc(output_len * sizeof(char));
@@ -56,6 +56,6 @@ void process_str(const char *input, char **output) {
       str_cat(temp, " ");
     }
   }
-
+  free(input_copy);
   *output = temp;
 }
