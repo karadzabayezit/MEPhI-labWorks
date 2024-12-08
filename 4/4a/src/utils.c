@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 
-#define SUFFIX "OKAY"
+#define SUFFIX "_SUFFIX"
 
 int is_first_vowel(const char *word) {
   char vowels[] = "AEIOUaeiou";
@@ -18,31 +17,46 @@ void add_suffix(char *res, const char *word) {
   }
 }
 
-void process_str(const char *input, char *output) {
-  char temp[1024] = {0};
-  char word[1024] = {0};
-  int output_len = 0;
+void process_str(const char *input, char **output) {
+  char *delimeters = " ,.";
 
-  const char *curr = input;
+  char* tmp_input = strdup(input);
+  char* tmp_word = strtok(tmp_input, delimeters);
+  int vowels_count = 0;
+  while(tmp_word != NULL) {
+    if(is_first_vowel(tmp_word)) {
+      vowels_count++;
+    }
+    tmp_word = strtok(NULL, delimeters);
+  }
+  printf("%d\n", vowels_count);
+  size_t output_len = strlen(input);
+  char *temp;
+  output_len += (vowels_count * strlen(SUFFIX));
+  temp = malloc(output_len * sizeof(char));
 
-  while (1) {
+  char *input_copy = strdup(input);
+  char *word = strtok((char*)input_copy, delimeters);
 
-    while(isspace(*curr)) curr++;
-    if(*curr == '\0') break;
+  while (word != NULL) {
+    size_t temp_len = sizeof(temp);
 
-    sscanf(curr, "%1023s", word);
+    if(is_first_vowel(word)) {
+      strcat(temp, word);
+      strcat(temp, SUFFIX);
+    } else {
+      strcat(temp, word);
+    }
 
-    char new_word[1024];
-    add_suffix(new_word, word);
+    printf("%s\n", temp);
+    output_len += strlen(word) + strlen(SUFFIX);
+    word = strtok(NULL, delimeters);
 
-    if (output_len > 0) {
+
+    if(word && strlen(word) > 0) {
       strcat(temp, " ");
     }
-    strcat(temp, new_word);
-    output_len++;
-
-    curr += strlen(word);
   }
 
-  strcpy(output, temp);
+  *output = temp;
 }

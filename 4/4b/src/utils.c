@@ -1,4 +1,3 @@
-#include <readline/chardefs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,6 +21,7 @@ void process_str(const char *input, char **output) {
   char *delimeters = " ,.";
 
   char* tmp_input = str_dup(input);
+  size_t output_len = str_len(tmp_input);
   char* tmp_word = str_tok(tmp_input, delimeters);
   int vowels_count = 0;
   while(tmp_word != NULL) {
@@ -30,8 +30,7 @@ void process_str(const char *input, char **output) {
     }
     tmp_word = str_tok(NULL, delimeters);
   }
-  printf("%d\n", vowels_count);
-  size_t output_len = strlen(input);
+
   char *temp;
   output_len += (vowels_count * str_len(SUFFIX));
   temp = malloc(output_len * sizeof(char));
@@ -43,21 +42,18 @@ void process_str(const char *input, char **output) {
     size_t temp_len = sizeof(temp);
 
     if(is_first_vowel(word)) {
-      strcat(temp, word);
-      strcat(temp, SUFFIX);
+      str_cat(temp, word);
+      str_cat(temp, SUFFIX);
     } else {
-      strcat(temp, word);
+      str_cat(temp, word);
     }
 
 
-    output_len += str_len(word) + strlen(SUFFIX);
+    output_len += str_len(word) + str_len(SUFFIX);
     word = str_tok(NULL, delimeters);
 
-    if(2*output_len > temp_len) {
-      temp = realloc(temp, temp_len*2);
-    }
-    if(word && strlen(word) > 0) {
-      strcat(temp, " ");
+    if(word && str_len(word) > 0) {
+      str_cat(temp, " ");
     }
   }
 
