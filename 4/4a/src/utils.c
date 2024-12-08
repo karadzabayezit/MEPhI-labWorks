@@ -22,6 +22,10 @@ void process_str(const char *input, char **output) {
 
   char* tmp_input = strdup(input);
   char* tmp_word = strtok(tmp_input, delimeters);
+  if(tmp_word == NULL) {
+    *output = tmp_input;
+    return;
+  }
   int vowels_count = 0;
   while(tmp_word != NULL) {
     if(is_first_vowel(tmp_word)) {
@@ -33,11 +37,10 @@ void process_str(const char *input, char **output) {
   size_t output_len = strlen(input);
   char *temp;
   output_len += (vowels_count * strlen(SUFFIX));
-  temp = malloc(output_len * sizeof(char));
+  temp = calloc(output_len, sizeof(char));
 
   char *input_copy = strdup(input);
   char *word = strtok((char*)input_copy, delimeters);
-
   while (word != NULL) {
     size_t temp_len = sizeof(temp);
 
