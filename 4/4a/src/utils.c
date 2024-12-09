@@ -10,13 +10,6 @@ int is_first_vowel(const char *word) {
   return strchr(vowels, word[0]) != NULL;
 }
 
-void add_suffix(char *res, const char *word) {
-  strcpy(res, word);
-  if(is_first_vowel(word)) {
-    strcat(res, SUFFIX);
-  }
-}
-
 void process_str(const char *input, char **output) {
   char *delimeters = " ,.";
 
@@ -26,6 +19,7 @@ void process_str(const char *input, char **output) {
     *output = tmp_input;
     return;
   }
+
   int vowels_count = 0;
   while(tmp_word != NULL) {
     if(is_first_vowel(tmp_word)) {
@@ -34,29 +28,26 @@ void process_str(const char *input, char **output) {
     tmp_word = strtok(NULL, delimeters);
   }
   printf("%d\n", vowels_count);
-  size_t output_len = strlen(input);
-  char *temp;
-  output_len += (vowels_count * strlen(SUFFIX));
-  temp = calloc(output_len, sizeof(char));
+  size_t output_len = strlen(input) + (vowels_count * strlen(SUFFIX)) + 1;
+  char *temp = calloc(output_len, sizeof(char));
+
+  if (temp == NULL) {
+    perror("Memory allocation failed");
+    return;
+  }
 
   char *input_copy = strdup(input);
-  char *word = strtok((char*)input_copy, delimeters);
+  char *word = strtok(input_copy, delimeters);
   while (word != NULL) {
-    size_t temp_len = sizeof(temp);
-
+    strcat(temp, word);
     if(is_first_vowel(word)) {
-      strcat(temp, word);
       strcat(temp, SUFFIX);
-    } else {
-      strcat(temp, word);
     }
 
-    printf("%s\n", temp);
-    output_len += strlen(word) + strlen(SUFFIX);
     word = strtok(NULL, delimeters);
 
 
-    if(word && strlen(word) > 0) {
+    if(word != NULL) {
       strcat(temp, " ");
     }
   }

@@ -94,8 +94,12 @@ char *str_tok(char *s, char *delim) {
 }
 
 char* str_dup(char* str) {
+	if(str == NULL) {
+		return NULL;
+	}
+
 	size_t len = str_len(str) + 1;
-	char* new_string = (char *) malloc(len * sizeof(char));
+	char* new_string = (char *)malloc(len * sizeof(char));
 
 	if (new_string == NULL) {
 		return NULL;
@@ -103,5 +107,5 @@ char* str_dup(char* str) {
 	for (int i = 0; i < len; i++) {
 	  new_string[i] = str[i];
 	}
-	return (char *) new_string;
+	return new_string;
 }

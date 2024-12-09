@@ -9,12 +9,12 @@ int main() {
   char *output = NULL;
 
   while ((input = read_line("Введите строку (завершение: Ctrl+D, Ctrl+Z): ")) != NULL) {
-
     process_str(input, &output);
 
     printf("\"%s\" -> \"%s\"\n", input, output);
 
     free(input);
+    free(output);
   }
 
   return 0;
