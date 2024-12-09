@@ -22,12 +22,12 @@ try:
   obj_files = []
   for c_file in c_files:
     obj_file = f"../build/{Path(c_file).stem}.o"
-    subprocess.run(['gcc', '-c', c_file, '-o', obj_file], check=True)
+    subprocess.run(['gcc', '-g', '-c', c_file, '-o', obj_file], check=True)
     obj_files.append(obj_file)
 
   print("Compilation to object files successful.")
 
-  subprocess.run(['gcc', *obj_files, '-lreadline', '-o', '../bin/app'], check=True)
+  subprocess.run(['gcc', '-g', *obj_files, '-lreadline', '-o', '../bin/app'], check=True)
   print("Compiled to executable successfully.\nRunning:\n")
 
 except subprocess.CalledProcessError as e:
@@ -36,7 +36,7 @@ except subprocess.CalledProcessError as e:
 
 
 try:
-    subprocess.run(['../bin/app'], check=True)
+    subprocess.run(['valgrind','--leak-check=full', '--track-origins=yes', '--track-origins=yes', '../bin/app'], check=True)
 except FileNotFoundError:
     print("Executable not found.")
 except subprocess.CalledProcessError as e:

@@ -12,7 +12,7 @@ char* read_line(char *str) {
   printf("%s", str);
   do {
     n = scanf("%80[^\n]", buf);
-    if (n < 0 && !res) {
+    if (n < 0 && !res || n == EOF) {
         return NULL;
     }
     else if (n > 0) {
@@ -21,7 +21,7 @@ char* read_line(char *str) {
       char* temp = realloc(res, str_len + 1);
       if(temp == NULL) {
         free(res);
-	return NULL;
+        return NULL;
       }
       res = temp;
       memcpy(res + len, buf, chunk_len);
@@ -35,10 +35,8 @@ char* read_line(char *str) {
     res[len] = '\0';
   }
   else {
-    res = calloc(1, sizeof(char));
-  }
-  if(len == 0 && n == 0) {
-  	return NULL;
+    free(res);
+    res = str_dup("");
   }
 
   return res;

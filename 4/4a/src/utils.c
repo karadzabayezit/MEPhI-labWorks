@@ -16,7 +16,8 @@ void process_str(const char *input, char **output) {
   char* tmp_input = strdup(input);
   char* tmp_word = strtok(tmp_input, delimeters);
   if(tmp_word == NULL) {
-    *output = tmp_input;
+    free(tmp_input);
+    *output = strdup("");
     return;
   }
 
@@ -33,6 +34,7 @@ void process_str(const char *input, char **output) {
 
   if (temp == NULL) {
     perror("Memory allocation failed");
+    free(temp);
     return;
   }
 
