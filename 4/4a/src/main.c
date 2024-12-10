@@ -21,10 +21,5 @@ int main() {
     free(output);
   }
 
-  free(output);
-  rl_clear_history();
-  rl_free_line_state();
-  rl_cleanup_after_signal();
-
   return 0;
 }
