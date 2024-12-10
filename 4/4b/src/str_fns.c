@@ -6,8 +6,7 @@
 char* str_cat (char des[], const char src[]) {
   int i = 0, j = 0;
 
-  while (des[i] != '\0')
-    i += 1;
+  while (des[i] != '\0') i++;
   while (src[j] != '\0') {
     des[i + j] = src[j];
     j += 1;
@@ -16,12 +15,10 @@ char* str_cat (char des[], const char src[]) {
   return des;
 }
 
-char* str_chr(const char* str, int c) {
-    while (*str != '\0' && *str != (char)c) {
-        str++;
-    }
+char* str_chr(const char* str, char c) {
+    while (*str != '\0' && *str != c) str++;
 
-    if (*str == (char)c) {
+    if (*str == c) {
         return (char*)str;
     }
 
@@ -59,7 +56,7 @@ bool is_delim(char c, char *delim) {
 }
 
 char *str_tok(char *s, char *delim) {
-  static char *p; // start of the next search
+  static char *p;
   if(!s) {
     s = p;
   }
@@ -81,7 +78,7 @@ char *str_tok(char *s, char *delim) {
   char *ret = s;
   while(1) {
     if(*s == '\0') {
-      p = s; // next exec will return NULL
+      p = s;
       return ret;
     }
     if(is_delim(*s, delim)) {

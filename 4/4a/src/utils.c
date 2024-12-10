@@ -28,7 +28,7 @@ void process_str(const char *input, char **output) {
     }
     tmp_word = strtok(NULL, delimeters);
   }
-  printf("%d\n", vowels_count);
+
   size_t output_len = strlen(input) + (vowels_count * strlen(SUFFIX)) + 1;
   char *temp = calloc(output_len, sizeof(char));
 
