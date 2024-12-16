@@ -33,7 +33,7 @@ void process_str(const char *input, char **output) {
   char *temp = calloc(output_len, sizeof(char));
 
   if (temp == NULL) {
-    perror("Memory allocation failed");
+    perror("Memory allocation failed"); // errno
     free(temp);
     return;
   }

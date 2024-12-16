@@ -36,7 +36,7 @@ int str_len(char *str) {
 
   while (str[i] != '\0') i++;
 
-  return i+1;
+  return i;
 }
 
 int is_space(char ch) {
