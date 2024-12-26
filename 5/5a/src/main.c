@@ -15,6 +15,13 @@ int main(int argc, char *argv[]) {
     printf("\nCars list:\n");
     print_cars(cars, count);
 
+    if (out_file) {
+        if(write_cars_to_file(out_file, cars, count) != 0) {
+          free_cars(cars, count);
+          return 1;
+        }
+    }
+
     free_cars(cars, count);
     return 0;
 }
