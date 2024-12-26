@@ -10,7 +10,11 @@ int main(int argc, char *argv[]) {
     Car *cars = NULL;
     size_t count = 0;
 
-    count = input_cars(&cars);
+    if(in_file) {
+      read_cars_from_file(in_file, &cars);
+    } else {
+      input_cars(&cars, &count);
+    }
 
     printf("\nCars list:\n");
     print_cars(cars, count);
