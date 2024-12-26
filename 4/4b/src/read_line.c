@@ -11,24 +11,26 @@ char* read_line(char *str) {
   printf("%s", str);
   do {
     n = scanf("%80[^\n]", buf);
-    if (n < 0 && !res || n == EOF) {
-        return NULL;
+
+    if (n == EOF) {
+      free(res);
+      return NULL;
+    } else if (n > 0) {
+        size_t chunk_len = strlen(buf);
+        char *temp = realloc(res, len + chunk_len + 1);
+        if (temp == NULL) {
+            free(res);
+            return NULL;
+        }
+        res = temp;
+        memcpy(res + len, buf, chunk_len);
+        len += chunk_len;
+    } else {
+        scanf("%*c");
     }
-    else if (n > 0) {
-      int chunk_len = str_len(buf);
-      int string_len = len + chunk_len;
-      char* temp = realloc(res, string_len + 1);
-      if(temp == NULL) {
-        free(temp);
-        free(res);
-        return NULL;
-      }
-      res = temp;
-      memcpy(res + len, buf, chunk_len);
-      len = string_len;
-      }
-    else {
-      scanf("%*c");}
+    if (n <= 0) {
+        break;
+    }
   } while (n > 0);
 
   if (len > 0) {
