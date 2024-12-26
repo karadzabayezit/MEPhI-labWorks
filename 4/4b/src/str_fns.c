@@ -48,7 +48,7 @@ int is_space(char ch) {
 bool is_delim(char c, char *delim) {
   while(*delim != '\0')
   {
-    if(c == *delim)
+    if(c == *delim || is_space(c))
       return true;
     delim++;
   }

@@ -20,7 +20,8 @@ void process_str(const char *input, char **output) {
   char* tmp_input = str_dup(input);
   char* tmp_word = str_tok(tmp_input, delimeters);
   if(tmp_word == NULL) {
-  	*output = tmp_input;
+    free(tmp_input);
+  	*output = calloc(1, sizeof(char));
   	return;
   }
 

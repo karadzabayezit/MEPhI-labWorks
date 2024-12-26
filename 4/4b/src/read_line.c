@@ -8,7 +8,6 @@ char* read_line(char *str) {
   char *res = NULL;
   int len = 0;
   int n = 0;
-
   printf("%s", str);
   do {
     n = scanf("%80[^\n]", buf);
@@ -17,15 +16,16 @@ char* read_line(char *str) {
     }
     else if (n > 0) {
       int chunk_len = str_len(buf);
-      int str_len = len + chunk_len;
-      char* temp = realloc(res, str_len + 1);
+      int string_len = len + chunk_len;
+      char* temp = realloc(res, string_len + 1);
       if(temp == NULL) {
+        free(temp);
         free(res);
         return NULL;
       }
       res = temp;
       memcpy(res + len, buf, chunk_len);
-      len = str_len;
+      len = string_len;
       }
     else {
       scanf("%*c");}
@@ -36,7 +36,7 @@ char* read_line(char *str) {
   }
   else {
     free(res);
-    res = str_dup("");
+    res = calloc(1, sizeof(char));
   }
 
   return res;
