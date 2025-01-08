@@ -1,11 +1,11 @@
 #include <stdlib.h>
 
-#define MAX_BRAND_LENGTH 16
+#define MAX_BRAND_LENGTH 128
 #ifndef CARS
 #define CARS
 
 typedef struct {
-  char brand[MAX_BRAND_LENGTH];
+  char *brand;
   char *owner_name;
   float mileage;
 } Car;

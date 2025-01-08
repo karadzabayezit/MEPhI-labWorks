@@ -1,51 +1,39 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
+#include <readline/readline.h>
 
 #include "../include/cars.h"
 
 #define INITIAL_ARRAY_SIZE 10
 
 int input_cars(Car **cars, size_t *count) {
-    size_t capacity = INITIAL_ARRAY_SIZE;
-    *cars = malloc(capacity * sizeof(Car));
+    char *input = NULL;
+    int i = 0;
+    int tmp_count = 0;
+    printf("How many cars will be? "); scanf("%d", &tmp_count);
+    *cars = malloc(tmp_count * sizeof(Car));
+    *count = tmp_count;
+    printf("Template: Brand, Owner, Milleage");
+    while(i != tmp_count) {
+      printf("\nCar %d \n", i+1);
+      char* brand = readline("Brand: ");
+      char* owner = readline("Owner: ");
+      float milleage = -1;
+      printf("Milleage: "); scanf("%f", &milleage);
 
-    if (!*cars) {
-        printf("Mem allocation failed to cars!");
-        return -1;
-    }
+      if(milleage ==  -1|| brand == NULL || owner == NULL) {
+        printf("Failed to get parts of car!");
+        return 1;
+      }
 
-    printf("Enter car details (brand, owner_name, mileage). Type 'end' to finish.\n");
 
-    while (1) {
-        if ((*count) == capacity) {
-            capacity *= 2;
-            *cars = realloc(*cars, capacity * sizeof(Car));
-            if (!*cars) {
-                printf("Mem reallocation failed to cars!");
-                return -1;
-            }
-        }
+      (*cars)[i].owner_name = owner;
+      (*cars)[i].brand = brand;
+      (*cars)[i].mileage = milleage;
+      printf("%s %s %f", (*cars)[i].brand, (*cars)[i].owner_name, (*cars)[i].mileage);
 
-        char brand[MAX_BRAND_LENGTH];
-        char owner_name[256];
-        float mileage;
-
-        printf("Car %zu: ", (*count) + 1);
-        if (scanf("%15s", brand) != 1 || strcmp(brand, "end") == 0) {
-            break;
-        }
-        scanf("%255s %f", owner_name, &mileage);
-
-        (*cars)[(*count)].owner_name = strdup(owner_name);
-        if (!(*cars)[(*count)].owner_name) {
-            printf("Mem allocation failed to owner!");
-            return -1;
-        }
-        strncpy((*cars)[(*count)].brand, brand, MAX_BRAND_LENGTH - 1);
-        (*cars)[(*count)].brand[MAX_BRAND_LENGTH - 1] = '\0';
-        (*cars)[(*count)].mileage = mileage;
-        (*count)++;
+      i++;
     }
 
     return 0;
