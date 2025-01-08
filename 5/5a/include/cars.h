@@ -1,6 +1,5 @@
 #include <stdlib.h>
 
-#define MAX_BRAND_LENGTH 128
 #ifndef CARS
 #define CARS
 
