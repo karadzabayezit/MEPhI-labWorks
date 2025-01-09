@@ -44,18 +44,14 @@ int inputX(long double *x) {
 
 int inputLimit(int *limit) {
 	char inputValue[20];
-
 	while (1) {
 		printf("Gimme limit: ");
 		if(fgets(inputValue, sizeof(inputValue), stdin) == NULL){
 			printf("\n!!!!!!!    EOF    !!!!!!!!!!!!!!\n");
 			return EOF;
 		};
-
 		char *notNum;
-
 		*limit = strtol(inputValue, &notNum, 10);
-
 		if(notNum == inputValue || *notNum != '\n') {
 			printf("Incorrect. ");
 		} else {
