@@ -1,2 +1,8 @@
-build/
-*/build/
+.vscode
+
+//Builded files
+build
+*/build
+*.exe
+bin
+*bin
