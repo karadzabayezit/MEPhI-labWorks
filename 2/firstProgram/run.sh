@@ -1,7 +1,7 @@
 echo "Compiling..."
 if [ ! -d "./build" ]; then
   mkdir ./build
-fi
+fi 
 gcc *.c -o ./build/app -lm
 echo "Compiled."
 echo $'\nStarting program:'

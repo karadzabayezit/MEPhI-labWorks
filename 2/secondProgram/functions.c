@@ -6,7 +6,6 @@ long double getCosWhile(long double radians, long double accurancy, int *termsCo
 	long double res = 1;
 	long double raz = 1;
 	radians = fmod(radians, 2 * M_PI);
-
 	int i = 1;
 	do {
         numInDegree *= -1 * radians * radians;
@@ -19,7 +18,6 @@ long double getCosWhile(long double radians, long double accurancy, int *termsCo
     } while (fabsl(raz) > accurancy);
 	return res;
 }
-
 int input(long double *x) {
   char inputValue[30];
 
@@ -29,7 +27,6 @@ int input(long double *x) {
           printf("\n!!!!!!!    EOF    !!!!!!!!!!!!!!\n");
           return EOF;
       }
-
       char *notNum;
       long double var = strtold(inputValue, &notNum);
 

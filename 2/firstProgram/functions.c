@@ -3,9 +3,7 @@
 long double getCos(long double radians, int limit) {
 	long double res = 1;
 	long double term = 1;
-	
 	radians = fmod(radians, 2 * M_PI);
-	
 	long double numInDegree = -1 * radians * radians;
 
 	for(int i = 1; i < limit ; i++) {

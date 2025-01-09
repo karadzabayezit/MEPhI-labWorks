@@ -4,7 +4,8 @@
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
-#endif
 
+#endif
+   
 int input(long double *x);
 long double getCosWhile(long double x, long double accurancy, int *termsCount);
