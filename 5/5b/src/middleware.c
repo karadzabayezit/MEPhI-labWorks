@@ -8,13 +8,15 @@
 
 void parse_arguments(int argc, char *argv[], char **input_file, char **output_file, int *sortAlgo, int *sortField, int *asc) {
     for (int i = 1; i < argc; i++) {
-      if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-i") == 0) {
+      if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-i") == 0 && argv[i+1] != NULL) {
         *input_file = argv[i+1];
         i++;
-      } else if(strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-o") == 0) {
-        *output_file = argv[i+1];
-        i++;
-      } else if(strcmp(argv[i], "--sortType") == 0 || strcmp(argv[i], "-s") == 0) {
+      } else if(strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-o") == 0 && argv[i+1] != NULL) {
+        if((argv[i+1])[0] != '-') {
+          *output_file = argv[i+1];
+          i++;
+        }
+      } else if(strcmp(argv[i], "--sortType") == 0 || strcmp(argv[i], "-s") == 0 && argv[i+1] != NULL) {
         char *sort = argv[i+1];
         if(strcmp(sort, "gnome") == 0) {
           *sortAlgo = 0;
@@ -23,12 +25,12 @@ void parse_arguments(int argc, char *argv[], char **input_file, char **output_fi
         } else if(strcmp(sort, "qsort") == 0) {
           *sortAlgo = 2;
         } else {
-          fprintf(stderr, "Usage: %s -i [gnome, insertion, qsort] \n", argv[0]);
+          fprintf(stderr, "Usage: %s -s|--sortType [gnome, insertion, qsort] \n", argv[0]);
           exit(EXIT_FAILURE);
           i--;
         }
         i++;
-      } else if(strcmp(argv[i], "--field") == 0 || strcmp(argv[i], "-f") == 0) {
+      } else if(strcmp(argv[i], "--field") == 0 || strcmp(argv[i], "-f") == 0 && argv[i+1] != NULL) {
         char *field = argv[i+1];
         if(strcmp(field, "brand") == 0) {
           *sortField = 0;
@@ -37,28 +39,28 @@ void parse_arguments(int argc, char *argv[], char **input_file, char **output_fi
         } else if(strcmp(field, "mileage") == 0) {
           *sortField = 2;
         } else {
-          fprintf(stderr, "Usage: %s -i [gnome, insertion, qsort] \n", argv[0]);
+          fprintf(stderr, "Usage: %s -f|--field [brand, owner, mileage] \n", argv[0]);
           exit(EXIT_FAILURE);
           i--;
         }
         i++;
-      } else if(strcmp(argv[i], "--ascending") == 0 || strcmp(argv[i], "-a") == 0) {
+      } else if(strcmp(argv[i], "--ascending") == 0 || strcmp(argv[i], "-a") == 0 && argv[i+1] != NULL) {
         char *ascType = argv[i+1];
         if(strcmp(ascType, "asc") == 0) {
           *asc = 0;
         } else if(strcmp(ascType, "desc") == 0) {
           *asc = 1;
         }  else {
-          fprintf(stderr, "Usage: %s -a [ asc|desc ]\n", argv[0]);
+          fprintf(stderr, "Usage: %s -a|--ascending [ asc|desc ]\n", argv[0]);
           exit(EXIT_FAILURE);
           i--;
         }
         i++;
-      } else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h")) {
-        printf("Usage: %s [-i input_file] [-o output_file]\n", argv[0]);
-        printf("          [-s gnome|insertion|qsort ] [-sortType gnome|insertion|qsort ]\n");
-        printf("          [-f brand|owner|mileage ] [-field brand|owner|mileage ]\n");
-        printf("          [-a asc|desc ] [-ascending asc|desc ]\n");
+      } else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+        printf("Usage: %s [-i|--input input_file] [-o|--output output_file]\n", argv[0]);
+        printf("          [-s|--sortType gnome|insertion|qsort ]\n");
+        printf("          [-f|--field brand|owner|mileage ]\n");
+        printf("          [-a|--ascending asc|desc ]\n");
         exit(EXIT_SUCCESS);
       } else {
         fprintf(stderr, "Use: %s -h|--help to see what is aviable\n", argv[0]);
@@ -97,18 +99,19 @@ int input_cars(Car **cars, size_t *count) {
 }
 
 int write_cars_to_file(const char *filename, Car *cars, size_t count) {
-    FILE *file = fopen(filename, "w");
-    if (!file) {
-        printf("Failed to open file");
-        return -1;
-    }
+  FILE *file = fopen(filename, "w");
 
-    for (size_t i = 0; i < count; i++) {
-        fprintf(file, "%s,%s,%.2f\n", cars[i].brand, cars[i].owner_name, cars[i].mileage);
-    }
+  if (!file) {
+      printf("Failed to open file\n");
+      return -1;
+  }
 
-    fclose(file);
-    return 0;
+  for (size_t i = 0; i < count; i++) {
+      fprintf(file, "%s,%s,%.2f\n", cars[i].brand, cars[i].owner_name, cars[i].mileage);
+  }
+
+  fclose(file);
+  return 0;
 }
 
 
