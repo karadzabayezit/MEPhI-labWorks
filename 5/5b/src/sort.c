@@ -10,7 +10,7 @@ int compare_cars_direct(const Car *a, const Car *b, int field, int descending) {
     if (field == 0) {
         result = strcmp(a->brand, b->brand);
     } else if (field == 1) {
-        result = strcmp(a->owner_name, b->owner_name);
+        result = strcmp(a->owner, b->owner);
     } else if (field == 2) {
         if (a->mileage < b->mileage) result = -1;
         else if (a->mileage > b->mileage) result = 1;
@@ -66,6 +66,4 @@ int sort(Car *cars, int count, int sortAlgo, int field, int asc) {
     default:
       break;
   }
-
-
 }
