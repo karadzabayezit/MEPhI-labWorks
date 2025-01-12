@@ -5,179 +5,241 @@
 
 #include "../include/cars.h"
 #include "../include/sort.h"
+#include "../include/parse_args.h"
 
-void parse_arguments(int argc, char *argv[], char **input_file, char **output_file, int *sortAlgo, int *sortField, int *asc) {
-    for (int i = 1; i < argc; i++) {
-      if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-i") == 0) {
-        *input_file = argv[i+1];
-        i++;
-      } else if(strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-o") == 0) {
-        *output_file = argv[i+1];
-        i++;
-      } else if(strcmp(argv[i], "--sortType") == 0 || strcmp(argv[i], "-s") == 0) {
-        char *sort = argv[i+1];
-        if(strcmp(sort, "gnome") == 0) {
-          *sortAlgo = 0;
-        } else if(strcmp(sort, "insertion") == 0) {
-          *sortAlgo = 1;
-        } else if(strcmp(sort, "qsort") == 0) {
-          *sortAlgo = 2;
-        } else {
-          fprintf(stderr, "Usage: %s -i [gnome, insertion, qsort] \n", argv[0]);
-          exit(EXIT_FAILURE);
-          i--;
-        }
-        i++;
-      } else if(strcmp(argv[i], "--field") == 0 || strcmp(argv[i], "-f") == 0) {
-        char *field = argv[i+1];
-        if(strcmp(field, "brand") == 0) {
-          *sortField = 0;
-        } else if(strcmp(field, "owner") == 0) {
-          *sortField = 1;
-        } else if(strcmp(field, "mileage") == 0) {
-          *sortField = 2;
-        } else {
-          fprintf(stderr, "Usage: %s -i [gnome, insertion, qsort] \n", argv[0]);
-          exit(EXIT_FAILURE);
-          i--;
-        }
-        i++;
-      } else if(strcmp(argv[i], "--ascending") == 0 || strcmp(argv[i], "-a") == 0) {
-        char *ascType = argv[i+1];
-        if(strcmp(ascType, "asc") == 0) {
-          *asc = 0;
-        } else if(strcmp(ascType, "desc") == 0) {
-          *asc = 1;
-        }  else {
-          fprintf(stderr, "Usage: %s -a [ asc|desc ]\n", argv[0]);
-          exit(EXIT_FAILURE);
-          i--;
-        }
-        i++;
-      } else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h")) {
-        printf("Usage: %s [-i input_file] [-o output_file]\n", argv[0]);
-        printf("          [-s gnome|insertion|qsort ] [-sortType gnome|insertion|qsort ]\n");
-        printf("          [-f brand|owner|mileage ] [-field brand|owner|mileage ]\n");
-        printf("          [-a asc|desc ] [-ascending asc|desc ]\n");
-        exit(EXIT_SUCCESS);
-      } else {
-        fprintf(stderr, "Use: %s -h|--help to see what is aviable\n", argv[0]);
-        exit(EXIT_FAILURE);
-      }
-    }
+char* get_file_extension(char* file_name) {
+  char* ext = calloc(6, sizeof(char));
+  if (!ext) {
+    perror("Failed to allocate memory");
+    return NULL;
+  }
+
+  char* ptr = strrchr(file_name, '.');
+  if (!ptr || ptr == file_name) {
+    return ext;
+  }
+
+  for (int i = 1; i < 6 && ptr[i] != '\0'; i++) {
+    ext[i-1] = ptr[i];
+  }
+
+  return ext;
 }
 
+
 int input_cars(Car **cars, size_t *count) {
-    char *input = NULL;
-    int i = 0;
-    int tmp_count = 0;
-    printf("How many cars will be? "); scanf("%d", &tmp_count);
-    *cars = malloc(tmp_count * sizeof(Car));
-    *count = tmp_count;
-    while(i != tmp_count) {
-      printf("\n---Car %d---\n", i+1);
-      char* brand = readline("Brand: ");
-      char* owner = readline("Owner: ");
-      float milleage = -1;
-      printf("Milleage: "); scanf("%f", &milleage);
+  char *input = NULL;
+  int i = 0;
+  int tmp_count = 0;
 
-      if(milleage ==  -1|| brand == NULL || owner == NULL) {
-        printf("Failed to get parts of car!");
-        return 1;
-      }
+  printf("How many cars will be? "); scanf("%d", &tmp_count);
 
-      (*cars)[i].brand = brand;
-      (*cars)[i].owner_name = owner;
-      (*cars)[i].mileage = milleage;
+  *cars = malloc(tmp_count * sizeof(Car));
+  *count = tmp_count;
 
-      i++;
+  while(i != tmp_count) {
+    printf("\n---Car %d---\n", i+1);
+    char* brand = readline("Brand: ");
+    char* owner = readline("Owner: ");
+    float milleage = -1;
+    printf("Milleage: "); scanf("%f", &milleage);
+    if(milleage ==  -1|| brand == NULL || owner == NULL) {
+      printf("Failed to get parts of car!");
+      return 1;
     }
 
-    return 0;
+    (*cars)[i].brand = brand;
+    (*cars)[i].owner = owner;
+    (*cars)[i].mileage = milleage;
+
+    i++;
+  }
+
+  return 0;
 }
 
 int write_cars_to_file(const char *filename, Car *cars, size_t count) {
-    FILE *file = fopen(filename, "w");
-    if (!file) {
-        printf("Failed to open file");
-        return -1;
-    }
+  FILE *file = fopen(filename, "a");
 
-    for (size_t i = 0; i < count; i++) {
-        fprintf(file, "%s,%s,%.2f\n", cars[i].brand, cars[i].owner_name, cars[i].mileage);
-    }
+  if (!file) {
+    printf("Failed to open file\n");
+    return -1;
+  }
 
-    fclose(file);
-    return 0;
+  for (size_t i = 0; i < count; i++) {
+    fprintf(file, "%s,%s,%.2f\n", cars[i].brand, cars[i].owner, cars[i].mileage);
+  }
+
+  fclose(file);
+  return 0;
+}
+
+int write_cars_to_binary_file(const char *filename, Car *cars, size_t count) {
+  FILE *file = fopen(filename, "wb");
+
+  if (!file) {
+    perror("Failed to open file");
+    return -1;
+  }
+
+  for (int i = 0; i < count; i++) {
+    int brand_len = strlen(cars[i].brand);
+    int owner_len = strlen(cars[i].owner);
+    fwrite(&brand_len, sizeof(int), 1, file);
+    fwrite(cars[i].brand, sizeof(char), brand_len, file);
+
+    fwrite(&owner_len, sizeof(int), 1, file);
+    fwrite(cars[i].owner, sizeof(char), owner_len, file);
+
+    fwrite(&cars[i].mileage, sizeof(float), 1, file);
+  }
+
+  fclose(file);
+	return 0;
 }
 
 
 int read_cars_from_file(const char *filename, Car **cars, size_t *count) {
-    FILE *file = fopen(filename, "r");
-    if (!file) {
-        printf("Failed to open file\n");
-        return -1;
-    }
+  FILE *file = fopen(filename, "r");
 
-    size_t capacity = 10;
-    *cars = malloc(capacity * sizeof(Car));
-    if (!*cars) {
-        printf("Memory allocation failed for cars!\n");
+  if (!file) {
+    printf("Failed to open file\n");
+    return -1;
+  }
+
+  size_t capacity = 10;
+
+  *cars = malloc(capacity * sizeof(Car));
+
+  if (!*cars) {
+    printf("Memory allocation failed for cars!\n");
+    fclose(file);
+    return -1;
+  }
+
+  char *line = NULL;
+  size_t len = 0;
+  int i = 0;
+
+  while (getline(&line, &len, file) != -1) {
+    line[strcspn(line, "\n")] = 0;
+
+    if (i == capacity) {
+      capacity *= 2;
+      Car *temp = realloc(*cars, capacity * sizeof(Car));
+      if (!temp) {
+        perror("Failed to reallocate memory");
+        free(line);
         fclose(file);
         return -1;
+      }
+        *cars = temp;
     }
 
-    char *line = NULL;
-    size_t len = 0;
-    int i = 0;
+    char *brand = strtok(line, ",");
+    char *owner = strtok(NULL, ",");
+    char *mileage_str = strtok(NULL, ",");
 
-    while (getline(&line, &len, file) != -1) {
-      line[strcspn(line, "\n")] = 0;
-
-      if (i == capacity) {
-        capacity *= 2;
-        Car *temp = realloc(*cars, capacity * sizeof(Car));
-        if (!temp) {
-          perror("Failed to reallocate memory");
-          free(line);
-          fclose(file);
-          return -1;
-        }
-          *cars = temp;
+    if (brand && owner && mileage_str) {
+      (*cars)[i].brand = strdup(brand);
+      if (!(*cars)[i].brand) {
+        printf("Failed to allocate memory for brand\n");
+        free(line);
+        fclose(file);
+        return -1;
       }
-
-      char *brand = strtok(line, ",");
-      char *owner_name = strtok(NULL, ",");
-      char *mileage_str = strtok(NULL, ",");
-
-
-      if (brand && owner_name && mileage_str) {
-        (*cars)[i].brand = strdup(brand);
-        if (!(*cars)[i].brand) {
-          printf("Failed to allocate memory for brand\n");
-          free(line);
-          fclose(file);
-          return -1;
+      (*cars)[i].owner = strdup(owner);
+      if (!(*cars)[i].owner) {
+        printf("Failed to allocate memory for owner\n");
+        free((*cars)[i].brand);
+        free(line);
+        fclose(file);
+        return -1;
         }
-
-        (*cars)[i].owner_name = strdup(owner_name);
-        if (!(*cars)[i].owner_name) {
-          printf("Failed to allocate memory for owner\n");
-          free((*cars)[i].brand);
-          free(line);
-          fclose(file);
-          return -1;
-          }
-
-          (*cars)[i].mileage = atof(mileage_str);
-          (i)++;
-      } else {
-        fprintf(stderr, "Invalid line format: %s\n", line);
-      }
-
+        (*cars)[i].mileage = atof(mileage_str);
+        (i)++;
+    } else {
+      fprintf(stderr, "Invalid line format: %s\n", line);
     }
-    *count = i;
-    free(line);
+  }
+
+  *count = i;
+  free(line);
+  fclose(file);
+  return 0;
+}
+
+int read_cars_from_binary_file(const char *filename, Car **cars, size_t *count) {
+  FILE *file = fopen(filename, "rb");
+
+  if (!file) {
+    perror("Failed to open file");
+    return -1;
+  }
+
+  size_t capacity = 10;
+  *cars = malloc(capacity * sizeof(Car));
+
+  if (!*cars) {
+    perror("Memory allocation failed for cars");
     fclose(file);
-    return 0;
+    return -1;
+  }
+
+  size_t i = 0;
+
+  while (1) {
+    if (i == capacity) {
+      capacity *= 2;
+      Car *temp = realloc(*cars, capacity * sizeof(Car));
+      if (!temp) {
+        perror("Failed to reallocate memory");
+        fclose(file);
+        return -1;
+      }
+      *cars = temp;
+    }
+    int brand_len, owner_len;
+    if (fread(&brand_len, sizeof(int), 1, file) != 1) break;
+    (*cars)[i].brand = malloc(brand_len + 1);
+
+    if (!(*cars)[i].brand) {
+      perror("Failed to allocate memory for brand");
+      fclose(file);
+      return -1;
+    }
+    if (fread((*cars)[i].brand, sizeof(char), brand_len, file) != brand_len) {
+      perror("Failed to read brand");
+      free((*cars)[i].brand);
+      fclose(file);
+      return -1;
+    }
+    (*cars)[i].brand[brand_len] = '\0';
+
+    if (fread(&owner_len, sizeof(int), 1, file) != 1) break;
+    (*cars)[i].owner = malloc(owner_len + 1);
+
+    if (!(*cars)[i].owner) {
+      perror("Failed to allocate memory for owner");
+      free((*cars)[i].brand);
+      fclose(file);
+      return -1;
+    }
+
+    if (fread((*cars)[i].owner, sizeof(char), owner_len, file) != owner_len) {
+      perror("Failed to read owner");
+      free((*cars)[i].brand);
+      free((*cars)[i].owner);
+      fclose(file);
+      return -1;
+    }
+    (*cars)[i].owner[owner_len] = '\0';
+
+    if (fread(&(*cars)[i].mileage, sizeof(float), 1, file) != 1) break;
+    i++;
+  }
+
+  *count = i;
+  fclose(file);
+  return 0;
 }

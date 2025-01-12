@@ -47,7 +47,7 @@ int input_cars(Car **cars, size_t *count) {
       }
 
       (*cars)[i].brand = brand;
-      (*cars)[i].owner_name = owner;
+      (*cars)[i].owner = owner;
       (*cars)[i].mileage = milleage;
 
       i++;
@@ -64,7 +64,7 @@ int write_cars_to_file(const char *filename, Car *cars, size_t count) {
     }
 
     for (size_t i = 0; i < count; i++) {
-        fprintf(file, "%s,%s,%.2f\n", cars[i].brand, cars[i].owner_name, cars[i].mileage);
+        fprintf(file, "%s,%s,%.2f\n", cars[i].brand, cars[i].owner, cars[i].mileage);
     }
 
     fclose(file);
@@ -107,11 +107,11 @@ int read_cars_from_file(const char *filename, Car **cars, size_t *count) {
       }
 
       char *brand = strtok(line, ",");
-      char *owner_name = strtok(NULL, ",");
+      char *owner = strtok(NULL, ",");
       char *mileage_str = strtok(NULL, ",");
 
 
-      if (brand && owner_name && mileage_str) {
+      if (brand && owner && mileage_str) {
         (*cars)[i].brand = strdup(brand);
         if (!(*cars)[i].brand) {
           printf("Failed to allocate memory for brand\n");
@@ -120,8 +120,8 @@ int read_cars_from_file(const char *filename, Car **cars, size_t *count) {
           return -1;
         }
 
-        (*cars)[i].owner_name = strdup(owner_name);
-        if (!(*cars)[i].owner_name) {
+        (*cars)[i].owner = strdup(owner);
+        if (!(*cars)[i].owner) {
           printf("Failed to allocate memory for owner\n");
           free((*cars)[i].brand);
           free(line);

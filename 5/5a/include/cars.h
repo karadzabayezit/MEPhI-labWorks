@@ -5,7 +5,7 @@
 
 typedef struct {
   char *brand;
-  char *owner_name;
+  char *owner;
   float mileage;
 } Car;
 
