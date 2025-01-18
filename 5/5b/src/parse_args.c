@@ -6,7 +6,7 @@ void parse_arguments(int argc, char *argv[], char **input_file, char **output_fi
     for (int i = 1; i < argc; i++) {
       if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-i") == 0 && argv[i+1] != NULL) {
         if((argv[i+1])[0] != '-') {
-          *output_file = argv[i+1];
+          *input_file = argv[i+1];
           i++;
         }
       } else if(strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-o") == 0 && argv[i+1] != NULL) {
