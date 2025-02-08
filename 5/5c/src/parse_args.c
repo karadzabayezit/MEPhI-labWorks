@@ -5,16 +5,16 @@
 
 void parse_arguments(int argc, char *argv[], int *generate, char **input_file, char **output_file, int *sortAlgo, int *sortField, int *asc) {
 	int opt;
-	while ((opt  = getopt(argc, argv, "g:i:o:s:f:a:")) != -1) {
+	while ((opt  = getopt(argc, argv, "g:i:o:s:f:a:h")) != -1) {
 		switch (opt) {
 			case 'g':
 				if (optarg[0] == '-') {
           fprintf(stderr, "Error: After -g must be a number\n");
           exit(EXIT_FAILURE);
         }
-				char *ptr = NULL;
+				char *ptr = '\0';
 				int temp = strtol(optarg, &ptr, 10);
-				if(*ptr != NULL || temp <= 0) {
+				if(*ptr != '\0' || temp <= 0) {
 					fprintf(stderr, "Error: After -g must be a number\n");
 					exit(EXIT_FAILURE);
 				}
@@ -68,6 +68,16 @@ void parse_arguments(int argc, char *argv[], int *generate, char **input_file, c
 					exit(EXIT_FAILURE);
 				}
 				break;
+			case 'h':
+				printf("\nUsage: %s\n", argv[0]);
+        printf("      [ -g  *n* ]  -  generate *n* random cars optional, but recommended\n");
+        printf("      [ -i  input_file ]  -  optional, but recommended\n");
+        printf("      [ -o  output_file ]  -  optional, but recommended\n");
+        printf("      [ -s  gnome|insertion|qsort ]  -  optional, GNOME by default\n");
+        printf("      [ -f  brand|owner|mileage ]  -  optional, BRAND by default\n");
+        printf("      [ -a  asc|desc ]  -  optional, ASC by default\n");
+				fprintf(stderr, "Read instruction above.\n");
+        exit(EXIT_SUCCESS);
 			default:
 				printf("\nUsage: %s\n", argv[0]);
         printf("      [ -g  *n* ]  -  generate *n* random cars optional, but recommended\n");
