@@ -2,21 +2,26 @@
 
 #include "../include/middleware.h"
 #include "../include/cars.h"
+#include "../include/parse_args.h"
+#include "../include/generate.h"
 
 int main(int argc, char *argv[]) {
     char *in_file = NULL;
     char *out_file = NULL;
+		int generate = 0;
 
-    parse_arguments(argc, argv, &in_file, &out_file);
+    parse_arguments(argc, argv, &generate, &in_file, &out_file);
 
     Car *cars = NULL;
     size_t count = 0;
 
-    if(in_file != NULL) {
+    if(generate == 0 && in_file != NULL) {
       read_cars_from_file(in_file, &cars, &count);
-    } else {
+    } else if(generate == 0) {
       input_cars(&cars, &count);
-    }
+    } else {
+			generate_cars(&cars, &count, generate);
+		}
 
     if (out_file != NULL) {
       if(write_cars_to_file(out_file, cars, count) != 0) {

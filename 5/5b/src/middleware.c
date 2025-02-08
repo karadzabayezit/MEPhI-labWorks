@@ -16,7 +16,7 @@ char* get_file_extension(char* file_name) {
 
   char* ptr = strrchr(file_name, '.');
   if (!ptr || ptr == file_name) {
-    return ext;
+    return NULL;
   }
 
   for (int i = 1; i < 6 && ptr[i] != '\0'; i++) {

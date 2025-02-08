@@ -5,28 +5,6 @@
 
 #include "../include/cars.h"
 
-void parse_arguments(int argc, char *argv[], char **input_file, char **output_file) {
-    int opt;
-    *input_file = NULL;
-    *output_file = NULL;
-
-    for (int i = 1; i < argc; i++) {
-      if(strcmp(argv[i], "--input") == 0 || strcmp(argv[i], "-i") == 0) {
-        *input_file = argv[i+1];
-        i++;
-      } else if(strcmp(argv[i], "--output") == 0 || strcmp(argv[i], "-o") == 0) {
-        *output_file = argv[i+1];
-        i++;
-      } else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h")) {
-        printf("Usage: %s [-i input_file] [-o output_file]\n", argv[0]);
-        exit(EXIT_SUCCESS);
-      } else {
-        fprintf(stderr, "Usage: %s [-i input_file] [-o output_file]\n", argv[0]);
-        exit(EXIT_FAILURE);
-      }
-    }
-}
-
 int input_cars(Car **cars, size_t *count) {
     char *input = NULL;
     int i = 0;

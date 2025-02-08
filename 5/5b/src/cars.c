@@ -16,11 +16,3 @@ void free_cars(Car *cars, size_t count) {
     }
     free(cars);
 }
-
-
-
-
-
-
-
-
