@@ -55,7 +55,6 @@ int insertion_sort(Car *cars, int count, int field, int asc) {
 int sort(Car *cars, int count, int sortAlgo, int field, int asc, double *time) {
 	clock_t begin = 0;
 	clock_t end = 0;
-	printf("\n%d\n", sortAlgo);
   switch(sortAlgo) {
     case 0:
 			begin = clock();
