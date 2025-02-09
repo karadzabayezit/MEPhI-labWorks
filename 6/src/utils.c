@@ -22,37 +22,89 @@ int append(Node **head, char c) {
     while (temp->next) {
       temp = temp->next;
     }
-      temp->next = new_node;
+    temp->next = new_node;
   }
 
 	return 0;
 }
 
 int modify_list(Node **head) {
-  while (*head && (*head)->data != '.') {
+  if (!head || !(*head)) return 0;
+
+  Node *firstDot = NULL;
+  Node *last_semicolon = NULL;
+
+  while (*head && ((*head)->data == ' ' || (*head)->data == '\t')) {
     Node *temp = *head;
     *head = (*head)->next;
     free(temp);
   }
 
-  Node *last_semicolon = NULL;
   Node *curr = *head;
   while (curr) {
+    if (!firstDot && curr->data == '.') {
+      firstDot = curr;
+    }
     if (curr->data == ';') {
       last_semicolon = curr;
     }
     curr = curr->next;
   }
 
+  if (firstDot) {
+    Node *temp = *head;
+    while (temp != firstDot) {
+      Node *prev = temp;
+      temp = temp->next;
+      free(prev);
+    }
+    *head = firstDot;
+  }
+
   if (last_semicolon) {
     Node *temp = last_semicolon->next;
     last_semicolon->next = NULL;
     while (temp) {
-      Node *next = temp->next;
-      free(temp);
-      temp = next;
-    }
-	}
+      Node *prev = temp;
+      temp = temp->next;
+      free(prev);
+      }
+  }
 
-	return 0;
+  Node *prev = NULL;
+  curr = *head;
+  int last_was_space = 0;
+
+  while (curr) {
+    if (curr->data == ' ' || curr->data == '\t') {
+      if (last_was_space || !prev) {
+      	Node *temp = curr;
+        prev->next = curr->next;
+        curr = curr->next;
+        free(temp);
+        continue;
+      }
+      curr->data = ' ';
+      last_was_space = 1;
+    } else {
+      last_was_space = 0;
+    }
+    prev = curr;
+    curr = curr->next;
+  }
+
+  curr = *head;
+  prev = NULL;
+  while (curr && curr->next) {
+    prev = curr;
+    curr = curr->next;
+  }
+
+  if (curr && (curr->data == ' ' || curr->data == '\t')) {
+    if (prev) prev->next = NULL;
+    free(curr);
+  }
+
+  return 0;
 }
+

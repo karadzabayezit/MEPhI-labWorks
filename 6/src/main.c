@@ -26,6 +26,6 @@ int main() {
       append(&head, c);
     }
   }
-
+	free_list(head);
   return 0;
 }
