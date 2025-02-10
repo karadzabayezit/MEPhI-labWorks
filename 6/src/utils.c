@@ -54,6 +54,7 @@ int modify_list(Node **head) {
   if (firstDot) {
     Node *temp = *head;
     while (temp != firstDot) {
+			if(temp == last_semicolon) last_semicolon = NULL;
       Node *prev = temp;
       temp = temp->next;
       free(prev);
